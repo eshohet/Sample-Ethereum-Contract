@@ -14,7 +14,8 @@ class App extends Component {
 
     this.state = {
       tokens: 0,
-      web3: null
+      web3: null,
+      faucetInstance: null
     }
   }
 
@@ -31,8 +32,8 @@ class App extends Component {
       // Instantiate contract once web3 provided.
       this.instantiateContract()
     })
-    .catch(() => {
-      console.log('Error finding web3.')
+    .catch((error) => {
+      console.log('Error finding web3.', error)
     })
   }
 
@@ -55,22 +56,32 @@ class App extends Component {
     this.state.web3.eth.getAccounts((error, accounts) => {
       faucet.deployed().then((instance) => {
           faucetInstance = instance
-
+          this.setState({faucetInstance: faucetInstance})
           return faucetInstance.balanceOf.call(accounts[0])
         }).then((result) => {
-          console.log(result);
           return this.setState({ tokens: result.c[0] })
         })
-
-        //   // Stores a given value, 5 by default.
-        //   return simpleStorageInstance.set(5, {from: accounts[0]})
-        // }).then((result) => {
-        //   // Get the value from the contract to prove it worked.
-        //   return simpleStorageInstance.get.call(accounts[0])
-        // }).then((result) => {
-        //   // Update state with the result.
-        //   return this.setState({ storageValue: result.c[0] })
     })
+  }
+
+  // updateBalance() {
+  //     this.state.web3.eth.getAccounts((error, accounts) => {
+  //         this.state.faucetInstance.balanceOf.call({from: accounts[0]})
+  //             .then((result => {
+  //                 console.log(result)
+  //                 // return this.setState({ tokens: result.c[0] })
+  //             }))
+  //     })
+  // }
+
+  dispenseTokens() {
+
+      this.state.web3.eth.getAccounts((error, accounts) => {
+          this.state.faucetInstance.dispense({from: accounts[0]})
+              .then((result => {
+                  // this.updateBalance()
+              }))
+      })
   }
 
   render() {
@@ -84,8 +95,8 @@ class App extends Component {
           <div className="pure-g">
             <div className="pure-u-1-1">
               <h1>BET tokens</h1>
-              <p>You currently have {this.state.tokens} tokens</p>
-              <p><button onClick="">Collect tokens</button></p>
+              <p>You currently have {this.state.tokens} BET tokens</p>
+              <p><button onClick={() => this.dispenseTokens()}>Collect tokens</button></p>
             </div>
           </div>
         </main>

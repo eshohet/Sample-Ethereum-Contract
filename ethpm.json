@@ -1,0 +1,14 @@
+{
+  "package_name": "decent.bet",
+  "version": "0.0.1",
+  "description": "Decent.bet",
+  "authors": [
+    "Elliot Shohet <elliot.shohet@gmail.com>"
+  ],
+  "keywords": [
+    "ethereum"
+  ],
+  "dependencies": {
+    "zeppelin": "^1.2.0"
+  }
+}

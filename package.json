@@ -23,6 +23,7 @@
     "eslint-plugin-import": "2.0.1",
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-react": "6.4.1",
+    "ethereumjs-testrpc": "^4.1.1",
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.9.0",
     "filesize": "3.3.0",
@@ -40,6 +41,7 @@
     "recursive-readdir": "2.1.0",
     "strip-ansi": "3.0.1",
     "style-loader": "0.13.1",
+    "truffle": "^3.4.7",
     "truffle-contract": "^1.1.8",
     "truffle-solidity-loader": "0.0.8",
     "url-loader": "0.5.7",
@@ -56,7 +58,10 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "deploy": "./node_modules/truffle/build/cli.bundled.js deploy --reset",
+    "ethinstall": "./node_modules/truffle/build/cli.bundled.js install",
+    "testrpc": "./node_modules/ethereumjs-testrpc/build/cli.node.js --account=0xdccc47a4e0d8ae745ab8309d1021b0a81fff19fda7d073123cf262c010d5d0d0,100000000000000000000000"
   },
   "jest": {
     "collectCoverageFrom": [

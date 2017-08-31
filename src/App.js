@@ -8,6 +8,9 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 
+import swal from 'sweetalert'
+import '../node_modules/sweetalert/dist/sweetalert.css'
+
 class App extends Component {
   constructor(props) {
     super(props)

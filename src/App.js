@@ -57,29 +57,29 @@ class App extends Component {
       faucet.deployed().then((instance) => {
           faucetInstance = instance
           this.setState({faucetInstance: faucetInstance})
-          return faucetInstance.balanceOf.call(accounts[0])
-        }).then((result) => {
-          return this.setState({ tokens: result.c[0] })
+          this.updateBalance()
         })
     })
   }
 
-  // updateBalance() {
-  //     this.state.web3.eth.getAccounts((error, accounts) => {
-  //         this.state.faucetInstance.balanceOf.call({from: accounts[0]})
-  //             .then((result => {
-  //                 console.log(result)
-  //                 // return this.setState({ tokens: result.c[0] })
-  //             }))
-  //     })
-  // }
+  updateBalance() {
+      this.state.web3.eth.getAccounts((error, accounts) => {
+          this.state.faucetInstance.balanceOf.call(accounts[0], {from: accounts[0]})
+              .then((result => {
+                  this.setState({ tokens: result.c[0] })
+              }))
+              .catch((error => {
+                console.log(error)
+              }))
+      })
+  }
 
   dispenseTokens() {
 
       this.state.web3.eth.getAccounts((error, accounts) => {
           this.state.faucetInstance.dispense({from: accounts[0]})
               .then((result => {
-                  // this.updateBalance()
+                  this.updateBalance()
               }))
       })
   }

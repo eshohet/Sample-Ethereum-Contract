@@ -19,7 +19,7 @@ contract Faucet is MintableToken {
     }
 
     /**
-     *  Dispenses
+     *  Dispenses tokens
      */
 
     function dispense() canMint returns (bool) {

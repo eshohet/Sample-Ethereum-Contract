@@ -30,9 +30,18 @@ contract SimpleCompany {
      * Buys shares given the amount passed
      */
 
-    function buyShares(uint shares) returns (bool) {
+    function buyShares(uint shares) returns (uint) {
         uint tokens = SafeMath.div(shares, SHARES_PER_TOKEN);
-        return faucet.transferFrom(msg.sender, this, tokens);
+
+        //approved amount must equal requested amount
+        require(faucet.allowance(msg.sender, this) == tokens);
+
+
+        //make transfer and issue shares
+        faucet.transferFrom(msg.sender, this, tokens);
+        balances[msg.sender] = SafeMath.add(balances[msg.sender], shares);
+
+        return balances[msg.sender];
 
     }
 

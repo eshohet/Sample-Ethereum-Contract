@@ -116,7 +116,9 @@ class App extends Component {
         })
     }
 
-    buyShares(global) {
+    buyShares() {
+
+
         swal({
                 title: "Buy shares",
                 text: "The current exchange rate is 1 BET = " + window.this.state.SHARES_PER_TOKEN + " Share",
@@ -124,7 +126,7 @@ class App extends Component {
                 showCancelButton: true,
                 closeOnConfirm: false,
                 animation: "slide-from-top",
-                inputPlaceholder: "Enter number of shares"
+                inputPlaceholder: "Enter number of shares to purchase"
             },
             function(shares) {
                 if (shares === false) return false;
@@ -138,8 +140,10 @@ class App extends Component {
                     window.this.state.faucetInstance.approve(window.this.state.companyInstance.address, shares, {from: accounts[0]})
                         .then((result => {
                             //transaction approved, proceed to pull funds
-
-                            window.this.updateBalance()
+                            window.this.state.companyInstance.buyShares(shares, {from: accounts[0]})
+                                .then((result => {
+                                    window.this.updateBalance()
+                                }))
                         }))
                 })
 

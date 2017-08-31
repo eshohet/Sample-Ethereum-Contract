@@ -124,7 +124,7 @@ class App extends Component {
                 text: "The current exchange rate is 1 BET = " + window.this.state.SHARES_PER_TOKEN + " Share",
                 type: "input",
                 showCancelButton: true,
-                closeOnConfirm: false,
+                closeOnConfirm: true,
                 animation: "slide-from-top",
                 inputPlaceholder: "Enter number of shares to purchase"
             },

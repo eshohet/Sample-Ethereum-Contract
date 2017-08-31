@@ -108,7 +108,7 @@ class App extends Component {
                 }))
             this.state.web3.eth.getBalance(this.state.companyInstance.address, function(err, res) {
                 if(!err)
-                    window.this.setState({ eth_deposited: (res.c[0]) })
+                    window.this.setState({ eth_deposited: window.this.state.web3.fromWei(parseFloat(res), 'ether') })
                 else
                     console.log(err)
             })

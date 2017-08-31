@@ -126,9 +126,10 @@
     "1504156052346": {
       "links": {},
       "events": {},
-      "updated_at": 1504156340405
+      "updated_at": 1504156672157,
+      "address": "0x266f8f8fe4ca4140187260946fc44883833461cf"
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1504156340405
+  "updated_at": 1504156672157
 }

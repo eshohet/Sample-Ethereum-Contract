@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import FaucetContract from '../build/contracts/Faucet.json'
+import CompanyContract from '../build/contracts/SimpleCompany.json'
 
 import getWeb3 from './utils/getWeb3'
 
@@ -19,7 +20,8 @@ class App extends Component {
             tokens: 0,
             shares: 0,
             web3: null,
-            faucetInstance: null
+            faucetInstance: null,
+            companyInstance: null
         }
     }
 
@@ -51,16 +53,20 @@ class App extends Component {
 
         const contract = require('truffle-contract')
         const faucet = contract(FaucetContract)
+        const company = contract(FaucetContract)
+
         faucet.setProvider(this.state.web3.currentProvider)
 
         // Declaring this for later so we can chain functions on SimpleStorage.
-        var faucetInstance
 
         // Get accounts.
         this.state.web3.eth.getAccounts((error, accounts) => {
             faucet.deployed().then((instance) => {
-                faucetInstance = instance
-                this.setState({faucetInstance: faucetInstance})
+                this.setState({faucetInstance: instance})
+                this.updateBalance()
+            })
+            company.deployed().then((instance) => {
+                this.setState({companyInstance: instance})
                 this.updateBalance()
             })
         })
@@ -71,6 +77,13 @@ class App extends Component {
             this.state.faucetInstance.balanceOf.call(accounts[0], {from: accounts[0]})
                 .then((result => {
                     this.setState({tokens: result.c[0]})
+                }))
+                .catch((error => {
+                    console.log(error)
+                }))
+            this.state.companyInstance.balanceOf.call(accounts[0], {from: accounts[0]})
+                .then((result => {
+                    this.setState({shares: result.c[0]})
                 }))
                 .catch((error => {
                     console.log(error)
@@ -106,7 +119,14 @@ class App extends Component {
                     return false
                 }
 
-                swal("Nice!", "You wrote: " + inputValue, "success");
+                // this.state.web3.eth.getAccounts((error, accounts) => {
+                //     this.state.faucetInstance.approve(this.state.company{from: accounts[0]})
+                //         .then((result => {
+                //             this.updateBalance()
+                //         }))
+                // })
+
+
             });
     }
 

@@ -10,7 +10,7 @@ contract SimpleCompany {
     ERC20 public faucet;
     uint8 public SHARES_PER_TOKEN = 1; //1 BET = 1 share
     uint256 public WEI_PER_SHARE = 1; //1 share = 1 WEI
-
+    uint256 public totalSupply = 0;
     mapping(address => uint256) balances;
 
     function SimpleCompany(address _faucet) {
@@ -40,6 +40,8 @@ contract SimpleCompany {
         //make transfer and issue shares
         faucet.transferFrom(msg.sender, this, tokens);
         balances[msg.sender] = SafeMath.add(balances[msg.sender], shares);
+
+        totalSupply = SafeMath.add(shares, totalSupply);
 
         return balances[msg.sender];
 

@@ -137,10 +137,10 @@ class App extends Component {
                 }
 
                 window.this.state.web3.eth.getAccounts((error, accounts) => {
-                    window.this.state.faucetInstance.approve(window.this.state.companyInstance.address, shares, {from: accounts[0]})
+                    window.this.state.faucetInstance.approve(window.this.state.companyInstance.address, shares, {from: accounts[0], gas: 200000})
                         .then((result => {
                             //transaction approved, proceed to pull funds
-                            window.this.state.companyInstance.buyShares(shares, {from: accounts[0]})
+                            window.this.state.companyInstance.buyShares(shares, {from: accounts[0], gas: 200000})
                                 .then((result => {
                                     window.this.updateBalance()
                                 }))

@@ -161,7 +161,7 @@ class App extends Component {
                 <main className="container">
                     <div className="pure-g">
                         <div className="pure-u-1-1">
-                            <h1>Interface</h1>
+                            <h1>Wealth Manager</h1>
                             <p>You currently have {this.state.tokens} BET tokens</p>
                             <p>You currently have {this.state.shares} shares</p>
                             <p>

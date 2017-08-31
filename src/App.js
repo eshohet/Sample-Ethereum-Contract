@@ -21,8 +21,12 @@ class App extends Component {
             shares: 0,
             web3: null,
             faucetInstance: null,
-            companyInstance: null
+            companyInstance: null,
+            SHARES_PER_TOKEN: null,
+            WEI_PER_SHARE: null,
         }
+
+        window.this = this //expose globally for debugging and binding purposes
     }
 
     componentWillMount() {
@@ -69,6 +73,16 @@ class App extends Component {
             company.deployed().then((instance) => {
                 this.setState({companyInstance: instance})
                 this.updateBalance()
+
+                instance.SHARES_PER_TOKEN.call({from: accounts[0]})
+                    .then((result => {
+                        this.setState({SHARES_PER_TOKEN: result.c[0]})
+                    }))
+                instance.WEI_PER_SHARE.call({from: accounts[0]})
+                    .then((result => {
+                        this.setState({WEI_PER_SHARE: result.c[0]})
+                    }))
+
             })
         })
     }
@@ -102,17 +116,17 @@ class App extends Component {
         })
     }
 
-    buyShares() {
+    buyShares(global) {
         swal({
                 title: "Buy shares",
-                text: "The current exchange rate is 1 BET = 1 Share",
+                text: "The current exchange rate is 1 BET = " + window.this.state.SHARES_PER_TOKEN + " Share",
                 type: "input",
                 showCancelButton: true,
                 closeOnConfirm: false,
                 animation: "slide-from-top",
                 inputPlaceholder: "Enter number of shares"
             },
-            function (shares) {
+            function(shares) {
                 if (shares === false) return false;
 
                 if (shares === "") {
@@ -120,10 +134,12 @@ class App extends Component {
                     return false
                 }
 
-                this.state.web3.eth.getAccounts((error, accounts) => {
-                    this.state.faucetInstance.approve(this.state.companyInstance.address, shares, {from: accounts[0]})
+                window.this.state.web3.eth.getAccounts((error, accounts) => {
+                    window.this.state.faucetInstance.approve(window.this.state.companyInstance.address, shares, {from: accounts[0]})
                         .then((result => {
-                            this.updateBalance()
+                            //transaction approved, proceed to pull funds
+
+                            window.this.updateBalance()
                         }))
                 })
 

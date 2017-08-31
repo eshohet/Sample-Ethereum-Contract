@@ -25,7 +25,8 @@ class App extends Component {
             companyInstance: null,
             SHARES_PER_TOKEN: null,
             WEI_PER_SHARE: null,
-            exchange_date: moment.now()
+            exchange_date: moment.now(),
+            eth_deposited: 0
         }
 
         window.this = this //expose globally for debugging and binding purposes
@@ -105,6 +106,12 @@ class App extends Component {
                 .catch((error => {
                     console.log(error)
                 }))
+            this.state.web3.eth.getBalance(this.state.companyInstance.address, function(err, res) {
+                if(!err)
+                    window.this.setState({ eth_deposited: (res.c[0]) })
+                else
+                    console.log(err)
+            })
         })
     }
 
@@ -166,10 +173,13 @@ class App extends Component {
                             <h1>Wealth Manager</h1>
                             <p>You currently have {this.state.tokens} BET tokens</p>
                             <p>You currently have {this.state.shares} shares</p>
-                            <p>The next exchange date is {this.state.exchange_date} </p>
+                            <p>The next exchange date is {this.state.exchange_date}, with an exchange rate of 1 WEI = {this.state.WEI_PER_SHARE} share</p>
+                            <p>There is currently {this.state.eth_deposited} ETH deposited in the company</p>
                             <p>
                                 <button onClick={() => this.dispenseTokens()}>Collect tokens</button>
                                 <button onClick={() => this.buyShares()}>Buy Shares</button>
+                                <button onClick={() => this.buyShares()}>Exchange</button>
+
                             </p>
 
                         </div>

@@ -45,4 +45,12 @@ contract SimpleCompany {
 
     }
 
+    /**
+    *   Allows for anyone to make a contribution to fund the company
+    */
+
+    function () payable {
+
+    }
+
 }

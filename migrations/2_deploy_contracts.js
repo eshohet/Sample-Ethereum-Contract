@@ -3,7 +3,6 @@ var SimpleCompany = artifacts.require("./SimpleCompany.sol");
 
 module.exports = function(deployer) {
   deployer.deploy(Faucet).then(function() {
-      deployer.deploy(SimpleCompany, Faucet.address);
-
+      return deployer.deploy(SimpleCompany, Faucet.address);
   });
 };

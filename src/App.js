@@ -53,9 +53,10 @@ class App extends Component {
 
         const contract = require('truffle-contract')
         const faucet = contract(FaucetContract)
-        const company = contract(FaucetContract)
+        const company = contract(CompanyContract)
 
         faucet.setProvider(this.state.web3.currentProvider)
+        company.setProvider(this.state.web3.currentProvider)
 
         // Declaring this for later so we can chain functions on SimpleStorage.
 
@@ -111,20 +112,20 @@ class App extends Component {
                 animation: "slide-from-top",
                 inputPlaceholder: "Enter number of shares"
             },
-            function (inputValue) {
-                if (inputValue === false) return false;
+            function (shares) {
+                if (shares === false) return false;
 
-                if (inputValue === "") {
+                if (shares === "") {
                     swal.showInputError("You need to write something!");
                     return false
                 }
 
-                // this.state.web3.eth.getAccounts((error, accounts) => {
-                //     this.state.faucetInstance.approve(this.state.company{from: accounts[0]})
-                //         .then((result => {
-                //             this.updateBalance()
-                //         }))
-                // })
+                this.state.web3.eth.getAccounts((error, accounts) => {
+                    this.state.faucetInstance.approve(this.state.companyInstance.address, shares, {from: accounts[0]})
+                        .then((result => {
+                            this.updateBalance()
+                        }))
+                })
 
 
             });

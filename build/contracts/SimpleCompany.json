@@ -61,9 +61,15 @@
     "1504125786009": {
       "links": {},
       "events": {},
-      "updated_at": 1504141329526
+      "updated_at": 1504141534296
+    },
+    "1504141665537": {
+      "links": {},
+      "events": {},
+      "updated_at": 1504141698669,
+      "address": "0xd9add2acfb3fb432219a3b242372893bbfa0c8df"
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1504141329526
+  "updated_at": 1504141698669
 }

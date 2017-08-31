@@ -11,6 +11,7 @@ import './App.css'
 
 import swal from 'sweetalert'
 import '../node_modules/sweetalert/dist/sweetalert.css'
+var moment = require('moment');
 
 class App extends Component {
     constructor(props) {
@@ -24,6 +25,7 @@ class App extends Component {
             companyInstance: null,
             SHARES_PER_TOKEN: null,
             WEI_PER_SHARE: null,
+            exchange_date: moment.now()
         }
 
         window.this = this //expose globally for debugging and binding purposes
@@ -164,6 +166,7 @@ class App extends Component {
                             <h1>Wealth Manager</h1>
                             <p>You currently have {this.state.tokens} BET tokens</p>
                             <p>You currently have {this.state.shares} shares</p>
+                            <p>The next exchange date is {this.state.exchange_date} </p>
                             <p>
                                 <button onClick={() => this.dispenseTokens()}>Collect tokens</button>
                                 <button onClick={() => this.buyShares()}>Buy Shares</button>

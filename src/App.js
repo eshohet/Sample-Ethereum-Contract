@@ -147,11 +147,11 @@ class App extends Component {
                 text: "The current exchange rate is 1 BET = " + window.this.state.SHARES_PER_TOKEN + " Share",
                 type: "input",
                 showCancelButton: true,
-                closeOnConfirm: true,
+                closeOnConfirm: false,
                 animation: "slide-from-top",
                 inputPlaceholder: "Enter number of shares to purchase"
             },
-            function(shares) {
+            function (shares) {
                 if (shares === false) return false;
 
                 if (shares === "") {
@@ -159,19 +159,47 @@ class App extends Component {
                     return false
                 }
 
-                window.this.state.web3.eth.getAccounts((error, accounts) => {
-                    window.this.state.faucetInstance.approve(window.this.state.companyInstance.address, shares, {from: accounts[0], gas: 200000})
-                        .then((result => {
-                            //transaction approved, proceed to pull funds
-                            window.this.state.companyInstance.buyShares(shares, {from: accounts[0], gas: 200000})
+                swal({
+                        title: "Authorize transfer",
+                        text: "I approve company to transfer BET on my behalf",
+                        type: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "Authorize",
+                        closeOnConfirm: false
+                    },
+                    function () {
+                        window.this.state.web3.eth.getAccounts((error, accounts) => {
+                            window.this.state.faucetInstance.approve(window.this.state.companyInstance.address, shares, {
+                                from: accounts[0],
+                                gas: 200000
+                            })
                                 .then((result => {
-                                    window.this.pullFromContract()
+                                    //transaction approved, proceed to pull funds
+                                    swal({
+                                            title: "Exchange BET for shares",
+                                            text: "Transfer BET in exchange for shares",
+                                            type: "info",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Transfer",
+                                            closeOnConfirm: false
+                                        },
+                                        function () {
+                                            window.this.state.companyInstance.buyShares(shares, {
+                                                from: accounts[0],
+                                                gas: 200000
+                                            })
+                                                .then((result => {
+                                                    window.this.pullFromContract()
+                                                    swal("Good job!", "You succesfully purchased shares", "success")
+                                                }))
+                                        }
+                                    )
                                 }))
-                        }))
-                })
-
-
-            });
+                        })
+                    }
+                )
+            }
+        )
     }
 
     exchangeShares() {

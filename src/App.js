@@ -254,7 +254,6 @@ class App extends Component {
                                     return
                                 window.this.state.companyInstance.changeUnlockTime(seconds, {from: accounts[0]})
                                     .then((result => {
-                                        console.log(result)
                                         window.this.pullFromContract()
                                         swal("Good job!", "Unlock time has been changed", "success")
 

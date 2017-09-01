@@ -5,23 +5,11 @@ module.exports = function(deployer, network, accounts) {
 
     deployer.deploy(Faucet);
 
-    deployer.deploy(SimpleCompany, Faucet.address).then(function() {
+    deployer.deploy(SimpleCompany, Faucet.address, + new Date() + 300000).then(function() {
         web3.eth.sendTransaction({from: accounts[0], to: SimpleCompany.address, value: 100000000000000000000}, function(err, res) {
-            if(!err) {
-                console.log(res);
-                return;
-            }
-            else
-                console.log(err);
+            if(err)
+                console.log(err)
+            return;
         });
     });
-
-
-
-  // deployer.deploy(Faucet).then(function() {
-  //     deployer.deploy(SimpleCompany, Faucet.address).then(function() {
-  //         //automatically fund with 100 Ether
-  //
-  //     });
-  // });
 };

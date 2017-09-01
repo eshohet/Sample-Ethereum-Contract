@@ -25,7 +25,7 @@ class App extends Component {
             companyInstance: null,
             SHARES_PER_TOKEN: null,
             WEI_PER_SHARE: null,
-            exchange_date: moment.now(),
+            unlockTime: null,
             eth_deposited: 0
         }
 
@@ -71,11 +71,11 @@ class App extends Component {
         this.state.web3.eth.getAccounts((error, accounts) => {
             faucet.deployed().then((instance) => {
                 this.setState({faucetInstance: instance})
-                this.updateBalance()
+                this.pullFromContract()
             })
             company.deployed().then((instance) => {
                 this.setState({companyInstance: instance})
-                this.updateBalance()
+                this.pullFromContract()
 
                 instance.SHARES_PER_TOKEN.call({from: accounts[0]})
                     .then((result => {
@@ -90,7 +90,7 @@ class App extends Component {
         })
     }
 
-    updateBalance() {
+    pullFromContract() {
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.faucetInstance.balanceOf.call(accounts[0], {from: accounts[0]})
                 .then((result => {
@@ -112,6 +112,14 @@ class App extends Component {
                 else
                     console.log(err)
             })
+            this.state.companyInstance.unlockTime({from: accounts[0]})
+                .then((result => {
+                    this.setState({unlockTime: result.c[0]})
+                }))
+                .catch((error => {
+                    console.log(error)
+                }))
+
         })
     }
 
@@ -120,7 +128,7 @@ class App extends Component {
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.faucetInstance.dispense({from: accounts[0]})
                 .then((result => {
-                    this.updateBalance()
+                    this.pullFromContract()
                 }))
         })
     }
@@ -151,7 +159,7 @@ class App extends Component {
                             //transaction approved, proceed to pull funds
                             window.this.state.companyInstance.buyShares(shares, {from: accounts[0], gas: 200000})
                                 .then((result => {
-                                    window.this.updateBalance()
+                                    window.this.pullFromContract()
                                 }))
                         }))
                 })
@@ -173,7 +181,10 @@ class App extends Component {
                             <h1>Wealth Manager</h1>
                             <p>You currently have {this.state.tokens} BET tokens</p>
                             <p>You currently have {this.state.shares} shares</p>
-                            <p>The next exchange date is {this.state.exchange_date}, with an exchange rate of 1 WEI = {this.state.WEI_PER_SHARE} share</p>
+                            <p>The next exchange date is&nbsp;
+                                {
+                                moment(this.state.unlockTime).fromNow()
+                                }, with an exchange rate of 1 WEI = {this.state.WEI_PER_SHARE} share</p>
                             <p>There is currently {this.state.eth_deposited} ETH deposited in the company</p>
                             <p>
                                 <button onClick={() => this.dispenseTokens()}>Collect tokens</button>

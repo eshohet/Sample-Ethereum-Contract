@@ -12,10 +12,17 @@ contract SimpleCompany {
     uint256 public WEI_PER_SHARE = 1; //1 share = 1 WEI
     uint256 public totalSupply = 0;
     mapping(address => uint256) balances;
+    uint256 public unlockTime;
 
-    function SimpleCompany(address _faucet) {
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function SimpleCompany(address _faucet, uint _unlockTime) {
         owner = msg.sender;
         faucet = ERC20(_faucet);
+        unlockTime = _unlockTime;
     }
 
     /**
@@ -54,5 +61,15 @@ contract SimpleCompany {
     function () payable {
 
     }
+
+    /**
+    *   Allows for the owner to unlock
+    */
+
+    function unlock() onlyOwner {
+        unlockTime = now;
+    }
+
+
 
 }

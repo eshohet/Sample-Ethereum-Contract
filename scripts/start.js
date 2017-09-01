@@ -328,6 +328,18 @@ var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 company.setProvider(web3.currentProvider);
 company.setNetwork(process.env.NETWORK_ID);
 
+
+/**
+ * Mongodb
+ */
+
+var MongoClient = require('mongodb').MongoClient
+    , assert = require('assert');
+
+// Connection URL
+var url = 'mongodb://localhost:27017/event_db';
+
+
 function allEvents(ev, cb) {
     ev({}, {fromBlock: 0, toBlock: 'latest'}).get((error, results) => {
         if (error) return cb(error);
@@ -336,7 +348,28 @@ function allEvents(ev, cb) {
     })
 }
 company.deployed().then(function(instance) {
+
         allEvents(instance.SharesBought, (error, response) => {
-            console.log(response.args.buyer, " bought: ", response.args.shares.toString(), " shares")
+            // Use connect method to connect to the server
+
+            MongoClient.connect(url, function(err, db) {
+                assert.equal(null, err);
+                let loggedEvents = db.collection('events');
+                const uuid = response.transactionHash;
+                loggedEvents.find({transactionHash: uuid}).toArray().then((records => {
+                    if(records.length === 0) {
+                      loggedEvents.insertOne({transactionHash: uuid, buyer: response.args.buyer, shares: response.args.shares.toString()});
+                      console.log("Record inserted into database");
+                      db.close();
+                    }
+                    else {
+                      console.log("Already stored transactionHash: ", uuid);
+                      db.close();
+                    }
+                }));
+
+
+            });
+
         });
 });

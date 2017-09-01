@@ -70,6 +70,13 @@ class App extends Component {
 
         // Get accounts.
         this.state.web3.eth.getAccounts((error, accounts) => {
+
+            if(accounts[0] === undefined)
+            {
+                swal("Metamask/Mist locked", "No accounts detected, please unlock wallet or associate account with Dapp", "error")
+                clearInterval(window.interval)
+            }
+
             faucet.deployed().then((instance) => {
                 this.setState({faucetInstance: instance})
                 this.pullFromContract()

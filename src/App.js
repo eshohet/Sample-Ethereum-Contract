@@ -75,8 +75,11 @@ class App extends Component {
                 this.pullFromContract()
             })
             .catch((error) => {
-                console.log(error)
-                swal("Faucet contract not deployed", "Run `npm run deploy` to deploy contracts to network", "error")
+                console.log(error.toString())
+                if(error.toString() === "Error: TypeError: Failed to fetch")
+                    swal("TestRPC not running", "Run `npm run testrpc` to continue", "error")
+                if(error.toString() === "Error: Faucet has not been deployed to detected network (network/artifact mismatch)")
+                    swal("Faucet contract not deployed", "Run `npm run deploy` to deploy contracts to network", "error")
                 clearInterval(window.interval)
 
             })
@@ -96,7 +99,10 @@ class App extends Component {
             })
             .catch((error => {
                 console.log(error)
-                swal("Company contract not deployed", "Run `npm run deploy` to deploy contracts to network", "error")
+                if(error.toString() === "Error: TypeError: Failed to fetch")
+                    swal("TestRPC not running", "Run `npm run testrpc` to continue", "error")
+                if(error.toString() === "Error: SimpleCompany has not been deployed to detected network (network/artifact mismatch)")
+                    swal("SimpleCompany contract not deployed", "Run `npm run deploy` to deploy contracts to network", "error")
                 clearInterval(window.interval)
 
             }))

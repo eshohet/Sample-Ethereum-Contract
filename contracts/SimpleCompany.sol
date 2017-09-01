@@ -21,6 +21,12 @@ contract SimpleCompany {
 
     event SharesBought(uint shares, address buyer);
 
+    /**
+     *  Setups contract
+     *  @_faucet Faucet address
+     *  @_unlockTime Time the period ends, unix timestamp
+     */
+
     function SimpleCompany(address _faucet, uint _unlockTime) {
         owner = msg.sender;
         faucet = ERC20(_faucet);
@@ -29,6 +35,7 @@ contract SimpleCompany {
 
     /**
      *  Returns balance of who
+     *  @who Address whose balance is being looked up
      */
 
     function balanceOf(address who) returns (uint256) {
@@ -36,7 +43,8 @@ contract SimpleCompany {
     }
 
     /**
-     * Buys shares given the amount passed
+     *  Buys shares given the amount passed
+     *  @shares Number of shares purchasing
      */
 
     function buyShares(uint shares) returns (uint) {
@@ -59,21 +67,49 @@ contract SimpleCompany {
     }
 
     /**
-    *   Allows for anyone to make a contribution to fund the company
-    */
+     *  Allows any user to exchange their shares for ethereum
+     *  after period ends
+     *  @shares Number of shares to exchange for ethereum
+     */
+
+    function exchangeShares(uint shares) returns(uint) {
+        require(now >= unlockTime);
+        require(balances[msg.sender] >= shares);
+
+        uint wei_sending = SafeMath.mul(WEI_PER_SHARE, shares);
+        require(this.balance >= wei_sending);
+
+        balances[msg.sender] = SafeMath.sub(balances[msg.sender], shares);
+
+        //automatically revert state in the case of failure
+        msg.sender.transfer(wei_sending);
+
+    }
+
+
+    /**
+     *   Allows for anyone to make a contribution to fund the company
+     */
 
     function () payable {
 
     }
 
     /**
-    *   Allows for the owner to unlock
-    */
+     *   Allows for the owner to unlock
+     */
 
     function unlock() onlyOwner {
         unlockTime = now;
     }
 
+    /**
+     *   Allows for the owner change the unlock time
+     *   @seconds Number of seconds to add to the current time
+     */
 
+    function changeUnlockTime(uint seconds) onlyOwner {
+        unlockTime = now + seconds;
+    }
 
 }

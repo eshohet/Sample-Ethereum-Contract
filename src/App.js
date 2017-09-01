@@ -220,15 +220,11 @@ class App extends Component {
                     swal.showInputError("You need to write something!");
                     return false
                 }
-
                 window.this.state.web3.eth.getAccounts((error, accounts) => {
-                    window.this.state.faucetInstance.approve(window.this.state.companyInstance.address, shares, {from: accounts[0], gas: 200000})
+                    window.this.state.companyInstance.exchangeShares(shares, {from: accounts[0], gas: 200000})
                         .then((result => {
-                            //transaction approved, proceed to pull funds
-                            window.this.state.companyInstance.buyShares(shares, {from: accounts[0], gas: 200000})
-                                .then((result => {
-                                    window.this.pullFromContract()
-                                }))
+                            console.log(result)
+                            swal("Good job!", "Shares have succesfully been exchanged", "success")
                         }))
                 })
 

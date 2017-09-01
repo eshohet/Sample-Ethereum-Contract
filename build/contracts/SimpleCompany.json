@@ -184,8 +184,80 @@
       },
       "updated_at": 1504233959404,
       "address": "0x2f417bd04de86464dbd60d3b0c4be18b8e38c4d9"
+    },
+    "1504234533756": {
+      "events": {
+        "0xb8b27236d63c55bf01a2edfc79fa8d9a06674b004c81821075106addd4701e33": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "buyer",
+              "type": "address"
+            }
+          ],
+          "name": "SharesBought",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xd9add2acfb3fb432219a3b242372893bbfa0c8df",
+      "updated_at": 1504234569036
+    },
+    "1504234602191": {
+      "events": {
+        "0xb8b27236d63c55bf01a2edfc79fa8d9a06674b004c81821075106addd4701e33": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "buyer",
+              "type": "address"
+            }
+          ],
+          "name": "SharesBought",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x3b44eb35af08ff48d2b97734e9bb09c56c96a90b",
+      "updated_at": 1504234609684
+    },
+    "1504237356411": {
+      "events": {
+        "0xb8b27236d63c55bf01a2edfc79fa8d9a06674b004c81821075106addd4701e33": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "buyer",
+              "type": "address"
+            }
+          ],
+          "name": "SharesBought",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x3b44eb35af08ff48d2b97734e9bb09c56c96a90b",
+      "updated_at": 1504237374987
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1504233959404
+  "updated_at": 1504237374987
 }

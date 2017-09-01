@@ -250,7 +250,7 @@ class App extends Component {
                             inputPlaceholder: "Seconds"
                             },
                             function(seconds) {
-                                if(seconds === "")
+                                if(seconds === "" || seconds === false)
                                     return
                                 window.this.state.companyInstance.changeUnlockTime(seconds, {from: accounts[0]})
                                     .then((result => {

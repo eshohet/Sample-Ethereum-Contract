@@ -79,11 +79,11 @@ class App extends Component {
 
                 instance.SHARES_PER_TOKEN.call({from: accounts[0]})
                     .then((result => {
-                        this.setState({SHARES_PER_TOKEN: result.c[0]})
+                        this.setState({SHARES_PER_TOKEN: parseFloat(result)})
                     }))
                 instance.WEI_PER_SHARE.call({from: accounts[0]})
                     .then((result => {
-                        this.setState({WEI_PER_SHARE: result.c[0]})
+                        this.setState({WEI_PER_SHARE: parseFloat(result)})
                     }))
 
             })
@@ -94,14 +94,14 @@ class App extends Component {
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.faucetInstance.balanceOf.call(accounts[0], {from: accounts[0]})
                 .then((result => {
-                    this.setState({tokens: result.c[0]})
+                    this.setState({tokens: parseFloat(result)})
                 }))
                 .catch((error => {
                     console.log(error)
                 }))
             this.state.companyInstance.balanceOf.call(accounts[0], {from: accounts[0]})
                 .then((result => {
-                    this.setState({shares: result.c[0]})
+                    this.setState({shares: parseFloat(result)})
                 }))
                 .catch((error => {
                     console.log(error)
@@ -114,7 +114,7 @@ class App extends Component {
             })
             this.state.companyInstance.unlockTime({from: accounts[0]})
                 .then((result => {
-                    this.setState({unlockTime: result.c[0]})
+                    this.setState({unlockTime: parseFloat(result)})
                 }))
                 .catch((error => {
                     console.log(error)
@@ -168,6 +168,40 @@ class App extends Component {
             });
     }
 
+    exchangeShares() {
+        swal({
+                title: "Exchange shares",
+                text: "The current exchange rate is 1 share = " +
+                window.this.state.web3.fromWei(window.this.state.WEI_PER_SHARE, "ether") + " Ξ",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: true,
+                animation: "slide-from-top",
+                inputPlaceholder: "Enter number of shares to exchange for Ξ"
+            },
+            function(shares) {
+                if (shares === false) return false;
+
+                if (shares === "") {
+                    swal.showInputError("You need to write something!");
+                    return false
+                }
+
+                window.this.state.web3.eth.getAccounts((error, accounts) => {
+                    window.this.state.faucetInstance.approve(window.this.state.companyInstance.address, shares, {from: accounts[0], gas: 200000})
+                        .then((result => {
+                            //transaction approved, proceed to pull funds
+                            window.this.state.companyInstance.buyShares(shares, {from: accounts[0], gas: 200000})
+                                .then((result => {
+                                    window.this.pullFromContract()
+                                }))
+                        }))
+                })
+
+
+            });
+    }
+
     render() {
         return (
             <div className="App">
@@ -184,12 +218,12 @@ class App extends Component {
                             <p>The next exchange date is&nbsp;
                                 {
                                 moment(this.state.unlockTime).fromNow()
-                                }, with an exchange rate of 1 WEI = {this.state.WEI_PER_SHARE} share</p>
+                                }, with an exchange rate of 1 share = {this.state.WEI_PER_SHARE} WEI</p>
                             <p>There is currently {this.state.eth_deposited} ETH deposited in the company</p>
                             <p>
                                 <button onClick={() => this.dispenseTokens()}>Collect tokens</button>
                                 <button onClick={() => this.buyShares()}>Buy Shares</button>
-                                <button onClick={() => this.buyShares()}>Exchange</button>
+                                <button onClick={() => this.exchangeShares()}>Exchange</button>
 
                             </p>
 

@@ -9,7 +9,7 @@ contract SimpleCompany {
     address public owner;
     ERC20 public faucet;
     uint8 public SHARES_PER_TOKEN = 1; //1 BET = 1 share
-    uint256 public WEI_PER_SHARE = 1; //1 share = 1 WEI
+    uint256 public WEI_PER_SHARE = 1500000000000000000; //1 share = 1.5 ETH
     uint256 public totalSupply = 0;
     mapping(address => uint256) balances;
     uint256 public unlockTime;
@@ -18,6 +18,8 @@ contract SimpleCompany {
         require(msg.sender == owner);
         _;
     }
+
+    event SharesBought(uint shares, address buyer);
 
     function SimpleCompany(address _faucet, uint _unlockTime) {
         owner = msg.sender;
@@ -49,6 +51,8 @@ contract SimpleCompany {
         balances[msg.sender] = SafeMath.add(balances[msg.sender], shares);
 
         totalSupply = SafeMath.add(shares, totalSupply);
+
+        SharesBought(shares, msg.sender);
 
         return balances[msg.sender];
 

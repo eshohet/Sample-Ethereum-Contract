@@ -74,6 +74,12 @@ class App extends Component {
                 this.setState({faucetInstance: instance})
                 this.pullFromContract()
             })
+            .catch((error) => {
+                console.log(error)
+                swal("Faucet contract not deployed", "Run `npm run deploy` to deploy contracts to network", "error")
+                clearInterval(window.interval)
+
+            })
             company.deployed().then((instance) => {
                 this.setState({companyInstance: instance})
                 this.pullFromContract()
@@ -88,11 +94,17 @@ class App extends Component {
                     }))
 
             })
+            .catch((error => {
+                console.log(error)
+                swal("Company contract not deployed", "Run `npm run deploy` to deploy contracts to network", "error")
+                clearInterval(window.interval)
+
+            }))
         })
 
         //refresh every second to provide like real-time experience
         //shouldn't impact UX much since the blockchain is downloaded completely
-        setInterval(this.pullFromContract, 1000);
+        window.interval = setInterval(this.pullFromContract, 1000);
     }
 
     pullFromContract() {
@@ -158,7 +170,6 @@ class App extends Component {
                     swal.showInputError("You need to write something!");
                     return false
                 }
-
                 swal({
                         title: "Authorize transfer",
                         text: "I approve company to transfer BET on my behalf",

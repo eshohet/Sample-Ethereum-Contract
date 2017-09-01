@@ -313,3 +313,30 @@ detect(DEFAULT_PORT).then(port => {
     console.log(chalk.red('Something is already running on port ' + DEFAULT_PORT + '.'));
   }
 });
+
+
+/**
+ * Web3 and Contract Interaction
+ */
+
+var Web3 = require('web3');
+
+var contract = require('truffle-contract');
+var artifacts = require('../build/contracts/SimpleCompany.json');
+var company = contract(artifacts);
+var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+company.setProvider(web3.currentProvider);
+company.setNetwork(process.env.NETWORK_ID);
+
+function allEvents(ev, cb) {
+    ev({}, {fromBlock: 0, toBlock: 'latest'}).get((error, results) => {
+        if (error) return cb(error);
+        results.forEach(result => cb(null, result));
+        ev().watch(cb);
+    })
+}
+company.deployed().then(function(instance) {
+        allEvents(instance.SharesBought, (error, response) => {
+            console.log(response.args.buyer, " bought: ", response.args.shares.toString(), " shares")
+        });
+});

@@ -282,8 +282,32 @@
       "links": {},
       "address": "0x5b15c893f74a6e1ad381971bb1dd640f7de7b131",
       "updated_at": 1504281076127
+    },
+    "1504304343149": {
+      "events": {
+        "0xb8b27236d63c55bf01a2edfc79fa8d9a06674b004c81821075106addd4701e33": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "buyer",
+              "type": "address"
+            }
+          ],
+          "name": "SharesBought",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x3b44eb35af08ff48d2b97734e9bb09c56c96a90b",
+      "updated_at": 1504304476533
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1504281076127
+  "updated_at": 1504304476533
 }

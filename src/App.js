@@ -112,11 +112,11 @@ class App extends Component {
                 .catch((error => {
                     console.log(error)
                 }))
-            this.state.web3.eth.getBalance(this.state.companyInstance.address, function(err, res) {
-                if(!err)
+            this.state.web3.eth.getBalance(this.state.companyInstance.address, function(error, res) {
+                if(!error)
                     window.this.setState({ eth_deposited: window.this.state.web3.fromWei(parseFloat(res), 'ether') })
                 else
-                    console.log(err)
+                    console.log(error)
             })
             this.state.companyInstance.unlockTime({from: accounts[0]})
                 .then((result => {
@@ -223,7 +223,6 @@ class App extends Component {
                 window.this.state.web3.eth.getAccounts((error, accounts) => {
                     window.this.state.companyInstance.exchangeShares(shares, {from: accounts[0], gas: 200000})
                         .then((result => {
-                            console.log(result)
                             swal("Good job!", "Shares have succesfully been exchanged", "success")
                         }))
                 })

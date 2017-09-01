@@ -23,8 +23,8 @@ contract SimpleCompany {
 
     /**
      *  Setups contract
-     *  @_faucet Faucet address
-     *  @_unlockTime Time the period ends, unix timestamp
+     *  $_faucet Faucet address
+     *  $_unlockTime Time the period ends, unix timestamp (ms)
      */
 
     function SimpleCompany(address _faucet, uint _unlockTime) {
@@ -35,7 +35,7 @@ contract SimpleCompany {
 
     /**
      *  Returns balance of who
-     *  @who Address whose balance is being looked up
+     *  $who Address whose balance is being looked up
      */
 
     function balanceOf(address who) returns (uint256) {
@@ -44,7 +44,7 @@ contract SimpleCompany {
 
     /**
      *  Buys shares given the amount passed
-     *  @shares Number of shares purchasing
+     *  $shares Number of shares purchasing
      */
 
     function buyShares(uint shares) returns (uint) {
@@ -69,11 +69,11 @@ contract SimpleCompany {
     /**
      *  Allows any user to exchange their shares for ethereum
      *  after period ends
-     *  @shares Number of shares to exchange for ethereum
+     *  $shares Number of shares to exchange for ethereum
      */
 
-    function exchangeShares(uint shares) returns(uint) {
-        require(now >= unlockTime);
+    function exchangeShares(uint shares) {
+        require(SafeMath.mul(now, 1000) >= unlockTime); //convert seconds to ms
         require(balances[msg.sender] >= shares);
 
         uint wei_sending = SafeMath.mul(WEI_PER_SHARE, shares);
@@ -105,11 +105,11 @@ contract SimpleCompany {
 
     /**
      *   Allows for the owner change the unlock time
-     *   @seconds Number of seconds to add to the current time
+     *   $seconds Number of seconds to add to the current time
      */
 
-    function changeUnlockTime(uint seconds) onlyOwner {
-        unlockTime = now + seconds;
+    function changeUnlockTime(uint _seconds) onlyOwner {
+        unlockTime = SafeMath.add(SafeMath.mul(now, 1000), SafeMath.mul(_seconds, 1000));
     }
 
 }

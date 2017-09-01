@@ -229,7 +229,41 @@ class App extends Component {
                 })
 
 
-            });
+            })
+    }
+
+    changeUnlockTime() {
+        this.state.web3.eth.getAccounts((error, accounts) => {
+            this.state.companyInstance.owner.call({from: accounts[0]})
+                .then((owner => {
+                    if(owner !== accounts[0]) {
+                        swal("Error", "Only the owner can change the unlock time", "error")
+                    }
+                    else {
+                        swal({
+                            title: "Change unlock period",
+                            text: "Enter the number of seconds until the next period unlocks. Enter 0 to immediately unlock.",
+                            type: "input",
+                            showCancelButton: true,
+                            closeOnConfirm: true,
+                            animation: "slide-from-top",
+                            inputPlaceholder: "Seconds"
+                            },
+                            function(seconds) {
+                                if(seconds === "")
+                                    return
+                                window.this.state.companyInstance.changeUnlockTime(seconds, {from: accounts[0]})
+                                    .then((result => {
+                                        console.log(result)
+                                        window.this.pullFromContract()
+                                        swal("Good job!", "Unlock time has been changed", "success")
+
+                                    }))
+                            }
+                        )
+                    }
+                }))
+        })
     }
 
     render() {
@@ -254,6 +288,7 @@ class App extends Component {
                                 <button onClick={() => this.dispenseTokens()}>Collect tokens</button>
                                 <button onClick={() => this.buyShares()}>Buy Shares</button>
                                 <button onClick={() => this.exchangeShares()}>Exchange</button>
+                                <button onClick={() => this.changeUnlockTime()}>Change unlockTime</button>
 
                             </p>
 

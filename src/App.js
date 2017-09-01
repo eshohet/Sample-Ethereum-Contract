@@ -97,8 +97,6 @@ class App extends Component {
 
     pullFromContract() {
 
-        console.log("--- Pull from contract ---")
-
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.faucetInstance.balanceOf.call(accounts[0], {from: accounts[0]})
                 .then((result => {

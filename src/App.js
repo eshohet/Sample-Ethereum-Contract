@@ -30,6 +30,7 @@ class App extends Component {
         }
 
         window.this = this //expose globally for debugging and binding purposes
+        this.pullFromContract = this.pullFromContract.bind(this);
     }
 
     componentWillMount() {
@@ -88,9 +89,16 @@ class App extends Component {
 
             })
         })
+
+        //refresh every second to provide like real-time experience
+        //shouldn't impact UX much since the blockchain is downloaded completely
+        setInterval(this.pullFromContract, 1000);
     }
 
     pullFromContract() {
+
+        console.log("--- Pull from contract ---")
+
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.faucetInstance.balanceOf.call(accounts[0], {from: accounts[0]})
                 .then((result => {

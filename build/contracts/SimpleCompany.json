@@ -199,10 +199,10 @@
           "type": "event"
         }
       },
-      "updated_at": 1504225627317,
-      "address": "0x1ba017cf5ddff6459a7ccd6ba9fb0579e6bac306"
+      "updated_at": 1504226348974,
+      "address": "0xf375a4728cde85e670005a8af988e8ddbc98a4af"
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1504225627317
+  "updated_at": 1504226348974
 }

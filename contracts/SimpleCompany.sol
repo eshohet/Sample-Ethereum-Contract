@@ -96,14 +96,6 @@ contract SimpleCompany {
     }
 
     /**
-     *   Allows for the owner to unlock
-     */
-
-    function unlock() onlyOwner {
-        unlockTime = now;
-    }
-
-    /**
      *   Allows for the owner change the unlock time
      *   $seconds Number of seconds to add to the current time
      */

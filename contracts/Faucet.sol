@@ -11,7 +11,7 @@ contract Faucet is MintableToken {
     uint8 public FAUCET_AMOUNT = 10; //number of tokens to dispense
 
     /**
-     * @dev Contructor that gives msg.sender all of existing tokens.
+     *  Contructor
      */
     function Faucet() {
     }

@@ -47,7 +47,7 @@ contract SimpleCompany {
      *  $shares Number of shares purchasing
      */
 
-    function buyShares(uint shares) returns (uint) {
+    function buyShares(uint shares) {
         uint tokens = SafeMath.div(shares, SHARES_PER_TOKEN);
 
         //approved amount must equal requested amount
@@ -61,8 +61,6 @@ contract SimpleCompany {
         totalSupply = SafeMath.add(shares, totalSupply);
 
         SharesBought(shares, msg.sender);
-
-        return balances[msg.sender];
 
     }
 

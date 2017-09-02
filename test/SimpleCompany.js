@@ -37,11 +37,43 @@ contract('SimpleCompany', function(accounts) {
         let newUnlockTime = + new Date() + 12345678910;
         try {
             await company.changeUnlockTime(newUnlockTime, { from: accounts[1] });
-            let savedUnlockTime = await company.unlockTime.call();
+            savedUnlockTime = await company.unlockTime.call();
 
         }
         catch(error) {
             assert("Error: VM Exception while processing transaction: invalid opcode", error.toString(), "user 1 was able to change unlockTime");
         }
+    });
+
+    it("buy shares", async function() {
+
+        //collect tokens from faucet
+        await faucet.dispense({from: accounts[0]});
+        let tokens = await faucet.balanceOf.call(accounts[0]).valueOf();
+        let SHARES_PER_TOKEN = await company.SHARES_PER_TOKEN.call().valueOf();
+
+        assert(tokens > 0, "balance should not be zero or negative");
+        assert(SHARES_PER_TOKEN > 0, "SHARES_PER_TOKEN should not be zero or negative");
+
+        //approve transfer of tokens to company (step 1 of purchasing shares)
+        let shares = tokens * SHARES_PER_TOKEN;
+        await faucet.approve(company.address, tokens, {from: accounts[0]});
+        let approvedAmount = await faucet.allowance(accounts[0], company.address).valueOf();
+
+        assert(approvedAmount, tokens, "requested approved amount is not equal to approved amount");
+
+        //transfer tokens to company and receive shares in exchange
+        const purchaseTxn = await company.buyShares(shares);
+        assert(purchaseTxn.logs[0].args.shares.valueOf(), shares, "shares purchased do not appear in logs");
+
+        //check balance of shares in company
+        const sharesBalance = await company.balanceOf(accounts[0]).valueOf();
+        assert(sharesBalance, shares, "shares bought does not equal balance of user");
+
+
+
+
+
+
     });
 });

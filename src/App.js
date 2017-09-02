@@ -214,7 +214,7 @@ class App extends Component {
                                             })
                                                 .then((result => {
                                                     window.this.pullFromContract()
-                                                    swal("Good job!", "You succesfully purchased shares", "success")
+                                                    swal("Good job!", "You successfully purchased shares", "success")
                                                 }))
                                         }
                                     )

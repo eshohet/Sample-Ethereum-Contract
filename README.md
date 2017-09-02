@@ -7,7 +7,10 @@
 
 ## Installation
 
-`npm install && npm run ethinstall`
+1. `npm install && npm run ethinstall`
+
+2. Import private key :
+`0xdccc47a4e0d8ae745ab8309d1021b0a81fff19fda7d073123cf262c010d5d0d0`
 
 ## Running
 

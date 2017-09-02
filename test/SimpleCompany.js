@@ -11,6 +11,33 @@ contract('SimpleCompany', function(accounts) {
         company = await SimpleCompany.new(faucet.address, + new Date() + 300000);
     });
 
+    const timeTravel = function (time) {
+        return new Promise((resolve, reject) => {
+            web3.currentProvider.sendAsync({
+                jsonrpc: "2.0",
+                method: "evm_increaseTime",
+                params: [time], // 86400 is num seconds in day
+                id: new Date().getTime()
+            }, (err, result) => {
+                if(err){ return reject(err) }
+                return resolve(result)
+            });
+        })
+    };
+
+    const mineBlock = function () {
+        return new Promise((resolve, reject) => {
+            web3.currentProvider.sendAsync({
+                jsonrpc: "2.0",
+                method: "evm_mine",
+                id: new Date().getTime()
+            }, (err, result) => {
+                if(err){ return reject(err) }
+                return resolve(result)
+            });
+        })
+    };
+
     it("check default unlock period of 5 minutes", async function() {
         //re-deploy to check unlock time
         let deployedUnlockedTime = + new Date() + 300000;
@@ -35,6 +62,8 @@ contract('SimpleCompany', function(accounts) {
 
     it("user 1 unable to change unlockTime", async function() {
         let newUnlockTime = + new Date() + 12345678910;
+        let succeeded = true;
+
         try {
             await company.changeUnlockTime(newUnlockTime, { from: accounts[1] });
             savedUnlockTime = await company.unlockTime.call();
@@ -42,15 +71,20 @@ contract('SimpleCompany', function(accounts) {
         }
         catch(error) {
             assert("Error: VM Exception while processing transaction: invalid opcode", error.toString(), "user 1 was able to change unlockTime");
+            succeeded = false;
         }
+
+        assert(succeeded === false, "user 1 was able to change unlockTime");
+
     });
 
-    it("buy shares", async function() {
+    it("buy shares and exchange them for ethereum", async function() {
 
         //collect tokens from faucet
         await faucet.dispense({from: accounts[0]});
         let tokens = await faucet.balanceOf.call(accounts[0]).valueOf();
         let SHARES_PER_TOKEN = await company.SHARES_PER_TOKEN.call().valueOf();
+        let WEI_PER_SHARE = await company.WEI_PER_SHARE.call().valueOf();
 
         assert(tokens > 0, "balance should not be zero or negative");
         assert(SHARES_PER_TOKEN > 0, "SHARES_PER_TOKEN should not be zero or negative");
@@ -70,10 +104,40 @@ contract('SimpleCompany', function(accounts) {
         const sharesBalance = await company.balanceOf(accounts[0]).valueOf();
         assert(sharesBalance, shares, "shares bought does not equal balance of user");
 
+        //attempt to exchange before unlockTime
+        await company.changeUnlockTime(100000000000, {from: accounts[0]});
+        let succeeded = true;
+        try {
+            await company.exchangeShares(shares, {from: accounts[0]});
+        }
+        catch(error) {
+            assert("Error: VM Exception while processing transaction: invalid opcode", error.toString(), "user was able to exchange before unlockTime");
+            succeeded = false;
+        }
 
+        assert(succeeded === false, "user was able to exchange before unlockTime");
 
+        //exchange after unlockTime
 
+        //fund company with 100 ETH
+        await web3.eth.sendTransaction({from: accounts[0], to: company.address, value: 100000000000000000000});
 
+        let balanceBefore = await web3.eth.getBalance(accounts[0]);
+        await company.changeUnlockTime(0, {from: accounts[0]});
 
+        await timeTravel(86400 * 3); //3 days later
+        await mineBlock(); // workaround for https://github.com/ethereumjs/testrpc/issues/336
+
+        try {
+            await company.exchangeShares(parseFloat(shares), {from: accounts[0]});
+        }
+        catch(error) {
+            console.log(error);
+        }
+
+        let balanceAfter = await web3.eth.getBalance(accounts[0]);
+
+        assert(balanceBefore + shares * WEI_PER_SHARE, balanceAfter, "amount of eth received is incorrect");
     });
+
 });

@@ -1,5 +1,22 @@
 # Sample Ethereum Code
 
+## Spec
+Build a dapp that runs on Truffle/TestRPC that allows users to perform the following functions:
+ 
+1. Redeem your own custom ERC-20 Tokens from a faucet.
+2. Users should be able to purchase "shares" on a separate contract using the redeemed token. 
+3. Shares issued in the contract should be exchangeable for a pre-defined amount of Ether (feel free to set the exchange rate yourself) by the shareholder at the end of a period with the click of a button, which would be manually triggered by the owner of the shares contract.
+4. If the owner of the contract is using the dapp, he/she should be able to trigger the next period.
+ 
+Considerations:
+- A period's an arbitrary amount of time here, which lasts as long as the owner of the contract would like it to.
+- The share contract will need to hold X amount of ether deposited by the owner for users to be able to liquidate their share for ether.
+ 
+Anytime shares are issued by a user, an event should be logged on contract. These events should be watched on a node.js backend using an instance of the contract's object
+which'll save the user's data into a MongoDB collection, if it hasn't been logged already. (We know this's redundant, but it's simply to test your skills)
+ 
+Make use of Truffle's React box for front-end and TestRPC for development.
+
 ## Dependencies
 
 1) MongoDB - `brew install mongodb`

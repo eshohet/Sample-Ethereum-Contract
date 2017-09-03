@@ -41,11 +41,8 @@ Make use of Truffle's React box for front-end and TestRPC for development.
 Run the following, in order, each as a new process:
 
     npm run mongo
-    
     npm run testrpc
-    
     npm run deploy
-    
     npm run start
 
 Then switch to the private testRPC network (localhost:8545) on Metamask, Mist, or Parity

@@ -43,8 +43,16 @@ class App extends Component {
                     web3: results.web3
                 })
 
+                this.state.web3.version.getNetwork((err, netId) => {
+                    if(netId < 5) {
+                        swal('Not connected to testRPC', 'Please switch to the right network', 'error')
+                    }
+                    else {
+                        this.instantiateContract()
+                    }
+                })
                 // Instantiate contract once web3 provided.
-                this.instantiateContract()
+
             })
             .catch((error) => {
                 console.log('Error finding web3.', error)

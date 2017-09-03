@@ -10,33 +10,7 @@ contract('SimpleCompany', function(accounts) {
         faucet = await Faucet.deployed();
         company = await SimpleCompany.new(faucet.address, + new Date() + 300000);
     });
-
-    const timeTravel = function (time) {
-        return new Promise((resolve, reject) => {
-            web3.currentProvider.sendAsync({
-                jsonrpc: "2.0",
-                method: "evm_increaseTime",
-                params: [time], // 86400 is num seconds in day
-                id: new Date().getTime()
-            }, (err, result) => {
-                if(err){ return reject(err) }
-                return resolve(result)
-            });
-        })
-    };
-
-    const mineBlock = function () {
-        return new Promise((resolve, reject) => {
-            web3.currentProvider.sendAsync({
-                jsonrpc: "2.0",
-                method: "evm_mine",
-                id: new Date().getTime()
-            }, (err, result) => {
-                if(err){ return reject(err) }
-                return resolve(result)
-            });
-        })
-    };
+    
 
     it("check default unlock period of 5 minutes", async function() {
         //re-deploy to check unlock time
@@ -124,9 +98,6 @@ contract('SimpleCompany', function(accounts) {
 
         let balanceBefore = await web3.eth.getBalance(accounts[0]);
         await company.changeUnlockTime(0, {from: accounts[0]});
-
-        await timeTravel(86400 * 3); //3 days later
-        await mineBlock(); // workaround for https://github.com/ethereumjs/testrpc/issues/336
 
         try {
             await company.exchangeShares(parseFloat(shares), {from: accounts[0]});

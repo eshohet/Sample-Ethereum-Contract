@@ -31,6 +31,9 @@ Run the following, in order, each as a new process:
     
     npm run start
 
+Then switch to the private testRPC network (localhost:8545) on Metamask, Mist, or Parity
+
+
 ## Testing
 
     npm run testrpc

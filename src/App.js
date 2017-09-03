@@ -247,6 +247,7 @@ class App extends Component {
                 window.this.state.web3.eth.getAccounts((error, accounts) => {
                     window.this.state.companyInstance.exchangeShares(shares, {from: accounts[0], gas: 200000})
                         .then((result => {
+                            window.this.pullFromContract()
                             swal("Good job!", "Shares have succesfully been exchanged", "success")
                         }))
                 })

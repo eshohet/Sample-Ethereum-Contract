@@ -33,4 +33,5 @@ Run the following, in order, each as a new process:
 
 ## Testing
 
-`npm run test`
+    npm run testrpc
+    npm run test
